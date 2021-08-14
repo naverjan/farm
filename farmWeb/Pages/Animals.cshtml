@@ -1,0 +1,109 @@
+﻿@page
+@model farmWeb.Pages.AnimalsModel
+@{
+}
+<h1>Animales</h1>
+
+<br />
+<br />
+
+@if (Model.error.isTrue)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.error.Message
+    </div>
+}
+<br />
+<br />
+
+@if (Model.Animals != null)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Edad</th>
+                <th scope="col">animal</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Peligrosidad</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var animal in Model.Animals)
+            {
+                <tr>
+                    <td>@animal.Id</td>
+                    <td>@animal.Nombre</td>
+                    <td>@animal.Edad</td>
+                    <td>@Model.GetCorral(animal.IdCorral).Result.Nombre</td>
+                    <td>@Model.GetAnimalType(animal.IdTipo).Result.Nombre</td>
+                    <td>@Model.GetDanger(Model.GetAnimalType(animal.IdTipo).Result.IdPeligrosidad).Result.Nombre</td>
+                    <td>
+                        <button class="btn btn-link" asp-page-handler="Delete" onclick="return confirm('Esta seguro de eliminar')"
+                                asp-route-id="@animal.Id">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Crear Animal
+    </button>
+    <a class="btn btn-secondary" asp-page="Incompa" >
+        Ver Compatibilidad
+    </a>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Creacion De Animal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Nombre</label>
+                            <input type="text" class="form-control" name="Nombre" placeholder="Opcional*">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Edad</label>
+                            <input type="number" class="form-control" id="inputCapacidad" name="Edad">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipos">Tipo de animal</label>
+                            <select class="form-control" name="idTipo">
+                                <option value="0">Seleccione..</option>
+                                @foreach (var type in Model.animalTypes)
+                                {
+                                    <option value="@type.Id">@type.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipos">Corral</label>
+                            <select class="form-control" name="idCorral">
+                                <option value="0">Seleccione..</option>
+                                @foreach (var corral in Model.Corrals)
+                                {
+                                    <option value="@corral.Id">@corral.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

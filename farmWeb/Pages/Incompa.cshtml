@@ -1,0 +1,93 @@
+﻿@page
+@model farmWeb.Pages.IncompaModel
+@{
+}
+
+<h1>Incompatibilidades</h1>
+
+<br />
+<br />
+
+@if (Model.error.isTrue)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.error.Message
+    </div>
+}
+<br />
+<br />
+
+@if (Model.Incompatibilities != null)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Animal</th>
+                <th scope="col">Animal No compatible</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var incompatibility in Model.Incompatibilities)
+            {
+                <tr>
+                    <td>@incompatibility.Id</td>
+                    <td>@Model.GetAnimalType(incompatibility.IdTipo).Result.Nombre</td>
+                    <td>@Model.GetAnimalType(incompatibility.IdTipo).Result.Nombre</td>
+                    <td>
+                        <button class="btn btn-link" asp-page-handler="Delete" onclick="return confirm('Esta seguro de eliminar')"
+                                asp-route-id="@incompatibility.Id">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crateCompat">
+        Crear Asociacion
+    </button>
+
+    <div class="modal fade" id="crateCompat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Asociacion De Incompatibilidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="tipos">Tipo de animal</label>
+                            <select class="form-control" name="idTipo" required>
+                                <option value="">Seleccione..</option>
+                                @foreach (var type in Model.AnimalTypes)
+                                {
+                                    <option value="@type.Id">@type.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipos">Tipo de animal no compatible</label>
+                            <select class="form-control" name="IdTipoNoCompatible"  required>
+                                <option value="">Seleccione..</option>
+                                @foreach (var corral in Model.AnimalTypes)
+                                {
+                                    <option value="@corral.Id">@corral.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,27 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido FarmAdmin</h1>
+    <p>Sistema de informacion para una granja, a continuacion podra ver los corrales con los que cuenta o puede dirigirse a la pestana Corrales y crear uno</p>
+</div>
+
+<div class="justify-content-center" style="display: inline-flex">
+    @if (Model.Corrals != null)
+    {
+        foreach (var corral in Model.Corrals)
+        {
+            <div class="card" style="width: 100%;margin:20px;max-width:400px">
+                <div class="card-body">
+                    <h5 class="card-title">@corral.Nombre</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Capacidad: @corral.Capacidad</h6>
+                    <p class="card-text">Animales Actuales: @Model.GetAnimalsOfCorral(corral.Id).Result.Count</p>                    
+                    <a class="btn btn-link" asp-page="Animals" asp-route-idCorral="@corral.Id">Ver Animales</a>                    
+                </div>
+            </div>
+        }
+    }
+</div>
